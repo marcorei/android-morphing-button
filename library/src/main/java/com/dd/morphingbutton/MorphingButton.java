@@ -30,6 +30,7 @@ public class MorphingButton extends Button {
 
     private StrokeGradientDrawable mDrawableNormal;
     private StrokeGradientDrawable mDrawablePressed;
+    private StrokeGradientDrawable mDrawableDisabled;
 
     public MorphingButton(Context context) {
         super(context);
@@ -66,6 +67,11 @@ public class MorphingButton extends Button {
             mDrawablePressed.setCornerRadius(params.cornerRadius);
             mDrawablePressed.setStrokeColor(params.strokeColor);
             mDrawablePressed.setStrokeWidth(params.strokeWidth);
+
+            mDrawableDisabled.setColor(params.colorDisabled);
+            mDrawableDisabled.setCornerRadius(params.cornerRadius);
+            mDrawableDisabled.setStrokeColor(params.strokeColor);
+            mDrawableDisabled.setStrokeWidth(params.strokeWidth);
 
             if (params.duration == 0) {
                 morphWithoutAnimation(params);
@@ -171,13 +177,15 @@ public class MorphingButton extends Button {
         StateListDrawable background = new StateListDrawable();
         mDrawableNormal = createDrawable(blue, cornerRadius, 0);
         mDrawablePressed = createDrawable(blueDark, cornerRadius, 0);
+        mDrawableDisabled = createDrawable(blue, cornerRadius, 0);
 
         mColor = blue;
         mStrokeColor = blue;
         mCornerRadius = cornerRadius;
 
         background.addState(new int[]{android.R.attr.state_pressed}, mDrawablePressed.getGradientDrawable());
-        background.addState(StateSet.WILD_CARD, mDrawableNormal.getGradientDrawable());
+        background.addState(new int[]{android.R.attr.state_enabled}, mDrawableNormal.getGradientDrawable());
+        background.addState(StateSet.WILD_CARD, mDrawableDisabled.getGradientDrawable());
 
         setBackgroundCompat(background);
     }
@@ -232,6 +240,7 @@ public class MorphingButton extends Button {
         private int height;
         private int color;
         private int colorPressed;
+        private int colorDisabled;
         private int duration;
         private int icon;
         private int strokeWidth;
@@ -279,6 +288,11 @@ public class MorphingButton extends Button {
 
         public Params colorPressed(int colorPressed) {
             this.colorPressed = colorPressed;
+            return this;
+        }
+
+        public Params colorDisabled(int colorDisabled) {
+            this.colorDisabled = colorDisabled;
             return this;
         }
 
